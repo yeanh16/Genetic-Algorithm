@@ -1,4 +1,5 @@
 import random
+import time
 
 def randomBit():
         if random.uniform(0,1) < 0.5 :
@@ -115,5 +116,59 @@ def qFive(n, chi, k, arg_lambda, repetitions):
                                         xbest = child
                                 newpoplist.append(child)
                         t += 1
-                        print("Gen " + str(t) + ": " + str(newpoplist))
+                        #print("Gen " + str(t) + ": " + str(newpoplist))
                 print(str(n) + "     " + str(chi) + "     " + str(k) + "       " + str(t) + "       " + str(fbest) + "   " + str(xbest)) 
+
+def qSix(n, chi, k, arg_lambda, repetitions, variableToAlter, alterRangex, alterRangey):
+        poplist = []
+        t = 0
+        step = (alterRangey - alterRangex) / repetitions
+        for i in range(0, arg_lambda):
+                poplist.append(generateRandomBitString(n))
+        for t in range(0, repetitions):
+                optimalfound = False
+                while not optimalfound:
+                        newpoplist = []
+                        for i in range(0, arg_lambda):
+                                x = tournSelection(k, poplist)
+                                y = tournSelection(k, poplist)
+                                mx = mutate(x, chi)
+                                my = mutate(y, chi)
+                                child = crossover(mx, my)
+                                if qThree(child) == n:
+                                        optimalfound = True
+                                        fbest = qThree(child)
+                                        xbest = child
+                                newpoplist.append(child)
+                        t += 1
+                        #print("Gen " + str(t) + ": " + str(newpoplist))
+                print(str(n) + "     " + str(chi) + "     " + str(arg_lambda) + "       " + str(k) + "       " + str(t) + "       " + str(fbest) + "   " + str(xbest)) 
+
+def qSixN(n, chi, k, arg_lambda, repetitions): #add 2 every time to n every repetition and time results
+        for r in range(0, repetitions):
+                poplist = []
+                t = 0
+                for i in range(0, arg_lambda):
+                        poplist.append(generateRandomBitString(n))
+                optimalfound = False
+                start = time.clock()
+                while not optimalfound:
+                        newpoplist = []
+                        for i in range(0, arg_lambda):
+                                x = tournSelection(k, poplist)
+                                y = tournSelection(k, poplist)
+                                mx = mutate(x, chi)
+                                my = mutate(y, chi)
+                                child = crossover(mx, my)
+                                if qThree(child) == n:
+                                        optimalfound = True
+                                        fbest = qThree(child)
+                                        xbest = child
+                                newpoplist.append(child)
+                        t += 1
+                        #print("Gen " + str(t) + ": " + str(newpoplist))
+                end = time.clock()
+                timetaken = round((end - start),2)
+                print(str(n) + "     " + str(chi) + "     " + str(arg_lambda) + "       " + str(k) + "       " + str(t) + "       " + str(fbest) + "   " + str(xbest) + "     "+ str(timetaken))
+                n += 1
+                
